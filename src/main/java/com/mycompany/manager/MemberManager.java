@@ -1,18 +1,25 @@
 package com.mycompany.manager;
 
 import com.mycompany.entity.Member;
-import com.mycompany.entity.PremiumMember;
-import com.mycompany.entity.RegularMember;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Manager class for Member operations in the library management system.
  */
-public class MemberManager extends BaseManager<Member> {
+public class MemberManager {
+
+    private List<Member> items = new ArrayList<>();
 
     public MemberManager() {
-        super();
+    }
+
+    public List<Member> getAll() {
+        return new ArrayList<>(this.items);
+    }
+
+    public void addLoadedItem(Member item) {
+        this.items.add(item);
     }
 
     public Member getMemberById(String id) {
@@ -29,11 +36,7 @@ public class MemberManager extends BaseManager<Member> {
         if (this.getMemberById(id) != null) return "Fail: Member ID already exists.";
         if (name.isEmpty()) return "Fail: Name cannot be empty.";
 
-        if (memberType.equalsIgnoreCase("premium")) {
-            this.items.add(new PremiumMember(id, name, phone, email));
-        } else {
-            this.items.add(new RegularMember(id, name, phone, email));
-        }
+        this.items.add(new Member(id, name, phone, email, memberType));
 
         return "Success";
     }

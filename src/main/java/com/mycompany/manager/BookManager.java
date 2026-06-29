@@ -7,10 +7,19 @@ import java.util.List;
 /**
  * Manager class for Book operations in the library management system.
  */
-public class BookManager extends BaseManager<Book> {
+public class BookManager {
+
+    private List<Book> items = new ArrayList<>();
 
     public BookManager() {
-        super();
+    }
+
+    public List<Book> getAll() {
+        return new ArrayList<>(this.items);
+    }
+
+    public void addLoadedItem(Book item) {
+        this.items.add(item);
     }
 
     public Book getBookById(String id) {

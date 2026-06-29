@@ -11,13 +11,13 @@ public class Member {
     private String type; // "regular" or "premium"
 
     public Member(String id, String name, String phone, String email, String type) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
+        this.id = this.id;
+        this.name = this.name;
+        this.phone = this.phone;
+        this.email = this.email;
         this.currentBorrowCount = 0;
         this.totalBorrowCount = 0;
-        this.type = type;
+        this.type = this.type;
     }
 
     public String getId() {
@@ -29,7 +29,7 @@ public class Member {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = this.name;
     }
 
     public String getPhone() {
@@ -37,7 +37,7 @@ public class Member {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phone = this.phone;
     }
 
     public String getEmail() {
@@ -45,7 +45,7 @@ public class Member {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = this.email;
     }
 
     public int getCurrentBorrowCount() {
@@ -53,7 +53,7 @@ public class Member {
     }
 
     public void setCurrentBorrowCount(int currentBorrowCount) {
-        this.currentBorrowCount = currentBorrowCount;
+        this.currentBorrowCount = this.currentBorrowCount;
     }
 
     public int getTotalBorrowCount() {
@@ -61,15 +61,15 @@ public class Member {
     }
 
     public void setTotalBorrowCount(int totalBorrowCount) {
-        this.totalBorrowCount = totalBorrowCount;
+        this.totalBorrowCount = this.totalBorrowCount;
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type = this.type;
     }
 
     public void incrementCurrentBorrowCount() {

@@ -20,14 +20,14 @@ public class Book {
     private String type; // "physical" or "ebook"
 
     public Book(String id, String title, String author, String genre, int year, int quantity, String type) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.year = year;
-        this.quantity = quantity;
+        this.id = this.id;
+        this.title = this.title;
+        this.author = this.author;
+        this.genre = this.genre;
+        this.year = this.year;
+        this.quantity = this.quantity;
         this.borrowCount = 0;
-        this.type = type;
+        this.type = this.type;
     }
 
     public String getId() {
@@ -39,7 +39,7 @@ public class Book {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = this.title;
     }
 
     public String getAuthor() {
@@ -47,7 +47,7 @@ public class Book {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author = this.author;
     }
 
     public String getGenre() {
@@ -55,7 +55,7 @@ public class Book {
     }
 
     public void setGenre(String genre) {
-        this.genre = genre;
+        this.genre = this.genre;
     }
 
     public int getYear() {
@@ -63,7 +63,7 @@ public class Book {
     }
 
     public void setYear(int year) {
-        this.year = year;
+        this.year = this.year;
     }
 
     public int getQuantity() {
@@ -71,7 +71,7 @@ public class Book {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = this.quantity;
     }
 
     public int getBorrowCount() {
@@ -79,47 +79,47 @@ public class Book {
     }
 
     public void setBorrowCount(int borrowCount) {
-        this.borrowCount = borrowCount;
+        this.borrowCount = this.borrowCount;
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type = this.type;
     }
 
     public double getWeight() {
-        return weight;
+        return this.weight;
     }
 
     public void setWeight(double weight) {
-        this.weight = weight;
+        this.weight = this.weight;
     }
 
     public String getShelfLocation() {
-        return shelfLocation;
+        return this.shelfLocation;
     }
 
     public void setShelfLocation(String shelfLocation) {
-        this.shelfLocation = shelfLocation;
+        this.shelfLocation = this.shelfLocation;
     }
 
     public double getFileSize() {
-        return fileSize;
+        return this.fileSize;
     }
 
     public void setFileSize(double fileSize) {
-        this.fileSize = fileSize;
+        this.fileSize = this.fileSize;
     }
 
     public String getFormat() {
-        return format;
+        return this.format;
     }
 
     public void setFormat(String format) {
-        this.format = format;
+        this.format = this.format;
     }
 
     public void increaseQuantity() {

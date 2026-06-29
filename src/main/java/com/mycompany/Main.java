@@ -36,21 +36,21 @@ public class Main {
     private void run() {
         int choice;
         do {
-            printMainMenu();
-            choice = readInt("Choose an option: ");
+            this.printMainMenu();
+            choice = this.readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
-                    manageBooks();
+                    this.manageBooks();
                     break;
                 case 2:
-                    manageMembers();
+                    this.manageMembers();
                     break;
                 case 3:
-                    manageBorrowing();
+                    this.manageBorrowing();
                     break;
                 case 4:
-                    manageReports();
+                    this.manageReports();
                     break;
                 case 5:
                     System.out.println("Exiting program...");
@@ -85,23 +85,23 @@ public class Main {
             System.out.println("4. View All Books");
             System.out.println("5. Search Books");
             System.out.println("6. Back");
-            choice = readInt("Choose an option: ");
+            choice = this.readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
-                    addBook();
+                    this.addBook();
                     break;
                 case 2:
-                    updateBook();
+                    this.updateBook();
                     break;
                 case 3:
-                    removeBook();
+                    this.removeBook();
                     break;
                 case 4:
-                    viewAllBooks();
+                    this.viewAllBooks();
                     break;
                 case 5:
-                    searchBooks();
+                    this.searchBooks();
                     break;
                 case 6:
                     break;
@@ -118,41 +118,45 @@ public class Main {
         System.out.println("2. Ebook");
         int typeChoice;
         while (true) {
-            typeChoice = readInt("Select type [1-2]: ");
+            typeChoice = this.readInt("Select type [1-2]: ");
             if (typeChoice == 1 || typeChoice == 2) break;
             System.out.println("Invalid choice. Please enter 1 or 2.");
         }
 
         System.out.print("Book ID: ");
-        String id = sc.nextLine().trim();
+        String id = this.sc.nextLine().trim();
         System.out.print("Title: ");
-        String title = sc.nextLine().trim();
+        String title = this.sc.nextLine().trim();
         System.out.print("Author: ");
-        String author = sc.nextLine().trim();
+        String author = this.sc.nextLine().trim();
         System.out.print("Genre: ");
-        String genre = sc.nextLine().trim();
-        int year = readInt("Publication Year: ");
+        String genre = this.sc.nextLine().trim();
+        int year = this.readInt("Publication Year: ");
         
         Book newBook = null;
 
         if (typeChoice == 1) {
-            int quantity = readInt("Quantity: ");
+            int quantity = this.readInt("Quantity: ");
             System.out.print("Weight (kg): ");
-            double weight = Double.parseDouble(sc.nextLine().trim());
+            double weight = Double.parseDouble(this.sc.nextLine().trim());
             System.out.print("Shelf Location: ");
-            String location = sc.nextLine().trim();
-            newBook = new com.mycompany.entity.PhysicalBook(id, title, author, genre, year, quantity, weight, location);
+            String location = this.sc.nextLine().trim();
+            newBook = new Book(id, title, author, genre, year, quantity, "physical");
+            newBook.setWeight(weight);
+            newBook.setShelfLocation(location);
         } else {
             System.out.print("File Size (MB): ");
-            double size = Double.parseDouble(sc.nextLine().trim());
+            double size = Double.parseDouble(this.sc.nextLine().trim());
             System.out.print("Format (PDF/EPUB): ");
-            String format = sc.nextLine().trim();
-            newBook = new com.mycompany.entity.Ebook(id, title, author, genre, year, size, format);
+            String format = this.sc.nextLine().trim();
+            newBook = new Book(id, title, author, genre, year, 999, "ebook");
+            newBook.setFileSize(size);
+            newBook.setFormat(format);
         }
 
         System.out.println("[1] Save [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = bookManager.addBook(newBook);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.bookManager.addBook(newBook);
             System.out.println(result.equals("Success") ? "Output: Book added successfully." : result);
         } else {
             System.out.println("Operation cancelled.");
@@ -163,9 +167,9 @@ public class Main {
     private void updateBook() {
         System.out.println("\n----------- UPDATE BOOK -----------");
         System.out.print("Enter Book ID: ");
-        String id = sc.nextLine().trim();
+        String id = this.sc.nextLine().trim();
 
-        Book b = bookManager.getBookById(id);
+        Book b = this.bookManager.getBookById(id);
         if (b == null) {
             System.out.println("Fail: Book not found.");
             return;
@@ -179,11 +183,11 @@ public class Main {
         System.out.println("Quantity: " + b.getQuantity());
 
         System.out.print("Enter new Quantity (leave blank to skip): ");
-        String quantityInput = sc.nextLine().trim();
+        String quantityInput = this.sc.nextLine().trim();
 
         System.out.println("[1] Update [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = bookManager.updateBookQuantity(id, quantityInput);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.bookManager.updateBookQuantity(id, quantityInput);
             System.out.println(result.equals("Success") ? "Output: Book updated successfully." : result);
         } else {
             System.out.println("Operation cancelled.");
@@ -194,12 +198,12 @@ public class Main {
     private void removeBook() {
         System.out.println("\n----------- REMOVE BOOK -----------");
         System.out.print("Enter Book ID: ");
-        String id = sc.nextLine().trim();
+        String id = this.sc.nextLine().trim();
 
         System.out.println("[1] Remove [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            boolean isBorrowed = borrowManager.isBookCurrentlyBorrowed(id);
-            String result = bookManager.removeBook(id, isBorrowed);
+        if (this.readInt("Choice: ") == 1) {
+            boolean isBorrowed = this.borrowManager.isBookCurrentlyBorrowed(id);
+            String result = this.bookManager.removeBook(id, isBorrowed);
             System.out.println(result.equals("Success") ? "Output: Book removed successfully." : result);
         } else {
             System.out.println("Operation cancelled.");
@@ -209,7 +213,7 @@ public class Main {
     // TODO (Van): Ham UI hien thi danh sach sach
     private void viewAllBooks() {
         System.out.println("\n----------- BOOK LIST -----------");
-        List<Book> books = bookManager.getAllBooks();
+        List<Book> books = this.bookManager.getAllBooks();
         if (books.isEmpty()) {
             System.out.println("No books available.");
             return;
@@ -227,9 +231,9 @@ public class Main {
     private void searchBooks() {
         System.out.println("\n----------- SEARCH BOOKS -----------");
         System.out.print("Enter keyword title/author/genre: ");
-        String keyword = sc.nextLine().trim().toLowerCase();
+        String keyword = this.sc.nextLine().trim().toLowerCase();
 
-        List<Book> books = bookManager.searchBooks(keyword);
+        List<Book> books = this.bookManager.searchBooks(keyword);
         if (books.isEmpty()) {
             System.out.println("No books found.");
         } else {
@@ -252,23 +256,23 @@ public class Main {
             System.out.println("4. View All Members");
             System.out.println("5. Search Members");
             System.out.println("6. Back");
-            choice = readInt("Choose an option: ");
+            choice = this.readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
-                    addMember();
+                    this.addMember();
                     break;
                 case 2:
-                    updateMember();
+                    this.updateMember();
                     break;
                 case 3:
-                    removeMember();
+                    this.removeMember();
                     break;
                 case 4:
-                    viewAllMembers();
+                    this.viewAllMembers();
                     break;
                 case 5:
-                    searchMembers();
+                    this.searchMembers();
                     break;
                 case 6:
                     break;
@@ -282,28 +286,28 @@ public class Main {
     private void addMember() {
         System.out.println("\n----------- ADD MEMBER -----------");
         System.out.print("Member ID: ");
-        String id = sc.nextLine().trim();
+        String id = this.sc.nextLine().trim();
         System.out.print("Name: ");
-        String name = sc.nextLine().trim();
+        String name = this.sc.nextLine().trim();
         System.out.print("Phone: ");
-        String phone = sc.nextLine().trim();
+        String phone = this.sc.nextLine().trim();
         System.out.print("Email: ");
-        String email = sc.nextLine().trim();
+        String email = this.sc.nextLine().trim();
 
         System.out.println("\nMember Type:");
         System.out.println("1. Regular Member (limit 3 books, 5000 VND/day fine)");
         System.out.println("2. Premium Member (limit 5 books, 2500 VND/day fine)");
         int typeChoice;
         while (true) {
-            typeChoice = readInt("Select type [1-2]: ");
+            typeChoice = this.readInt("Select type [1-2]: ");
             if (typeChoice == 1 || typeChoice == 2) break;
             System.out.println("Invalid choice. Please enter 1 or 2.");
         }
         String memberType = (typeChoice == 2) ? "premium" : "regular";
 
         System.out.println("[1] Save [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = memberManager.addMember(id, name, phone, email, memberType);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.memberManager.addMember(id, name, phone, email, memberType);
             System.out.println(result.equals("Success") ? "Output: Member added successfully." : result);
         } else {
             System.out.println("Operation cancelled.");
@@ -314,9 +318,9 @@ public class Main {
     private void updateMember() {
         System.out.println("\n----------- UPDATE MEMBER -----------");
         System.out.print("Enter Member ID: ");
-        String id = sc.nextLine().trim();
+        String id = this.sc.nextLine().trim();
 
-        Member m = memberManager.getMemberById(id);
+        Member m = this.memberManager.getMemberById(id);
         if (m == null) {
             System.out.println("Fail: Member not found.");
             return;
@@ -328,13 +332,13 @@ public class Main {
         System.out.println("Email: " + m.getEmail());
 
         System.out.print("New Phone (leave blank to skip): ");
-        String newPhone = sc.nextLine().trim();
+        String newPhone = this.sc.nextLine().trim();
         System.out.print("New Email (leave blank to skip): ");
-        String newEmail = sc.nextLine().trim();
+        String newEmail = this.sc.nextLine().trim();
 
         System.out.println("[1] Update [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = memberManager.updateMember(id, newPhone, newEmail);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.memberManager.updateMember(id, newPhone, newEmail);
             System.out.println(result.equals("Success") ? "Output: Member updated successfully." : result);
         } else {
             System.out.println("Operation cancelled.");
@@ -345,11 +349,11 @@ public class Main {
     private void removeMember() {
         System.out.println("\n----------- REMOVE MEMBER -----------");
         System.out.print("Enter Member ID: ");
-        String id = sc.nextLine().trim();
+        String id = this.sc.nextLine().trim();
 
         System.out.println("[1] Remove [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = memberManager.removeMember(id);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.memberManager.removeMember(id);
             System.out.println(result.equals("Success") ? "Output: Member removed successfully." : result);
         } else {
             System.out.println("Operation cancelled.");
@@ -359,7 +363,7 @@ public class Main {
     // TODO (Van): Ham UI xem tat ca Member
     private void viewAllMembers() {
         System.out.println("\n----------- MEMBER LIST -----------");
-        List<Member> members = memberManager.getAllMembers();
+        List<Member> members = this.memberManager.getAllMembers();
         if (members.isEmpty()) {
             System.out.println("No members available.");
             return;
@@ -378,9 +382,9 @@ public class Main {
     private void searchMembers() {
         System.out.println("\n----------- SEARCH MEMBERS -----------");
         System.out.print("Enter keyword name/id: ");
-        String keyword = sc.nextLine().trim().toLowerCase();
+        String keyword = this.sc.nextLine().trim().toLowerCase();
 
-        List<Member> members = memberManager.searchMembers(keyword);
+        List<Member> members = this.memberManager.searchMembers(keyword);
         if (members.isEmpty()) {
             System.out.println("No members found.");
         } else {
@@ -401,17 +405,17 @@ public class Main {
             System.out.println("3. View Currently Borrowed Books");
             System.out.println("4. View Borrowing History By Member");
             System.out.println("5. Back");
-            choice = readInt("Choose an option: ");
+            choice = this.readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
-                    borrowBook();
+                    this.borrowBook();
                     break;
                 case 2:
-                    returnBook();
+                    this.returnBook();
                     break;
                 case 3:
-                    viewCurrentlyBorrowedBooks();
+                    this.viewCurrentlyBorrowedBooks();
                     break;
                 case 4:
                     viewBorrowingHistoryByMember();
@@ -427,15 +431,15 @@ public class Main {
     private void borrowBook() {
         System.out.println("\n----------- BORROW BOOK -----------");
         System.out.print("Member ID: ");
-        String memberId = sc.nextLine().trim();
+        String memberId = this.sc.nextLine().trim();
         System.out.print("Book ID: ");
-        String bookId = sc.nextLine().trim();
+        String bookId = this.sc.nextLine().trim();
         System.out.print("Borrow Date (DD/MM/YYYY): ");
-        String borrowDate = sc.nextLine().trim();
+        String borrowDate = this.sc.nextLine().trim();
 
         System.out.println("[1] Confirm [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = borrowManager.borrowBook(memberId, bookId, borrowDate);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.borrowManager.borrowBook(memberId, bookId, borrowDate);
             System.out.println(result);
         } else {
             System.out.println("Operation cancelled.");
@@ -445,15 +449,15 @@ public class Main {
     private void returnBook() {
         System.out.println("\n----------- RETURN BOOK -----------");
         System.out.print("Member ID: ");
-        String memberId = sc.nextLine().trim();
+        String memberId = this.sc.nextLine().trim();
         System.out.print("Book ID: ");
-        String bookId = sc.nextLine().trim();
+        String bookId = this.sc.nextLine().trim();
         System.out.print("Return Date (DD/MM/YYYY): ");
-        String returnDateStr = sc.nextLine().trim();
+        String returnDateStr = this.sc.nextLine().trim();
 
         System.out.println("[1] Confirm Return [2] Cancel");
-        if (readInt("Choice: ") == 1) {
-            String result = borrowManager.returnBook(memberId, bookId, returnDateStr);
+        if (this.readInt("Choice: ") == 1) {
+            String result = this.borrowManager.returnBook(memberId, bookId, returnDateStr);
             System.out.println(result);
         } else {
             System.out.println("Operation cancelled.");
@@ -462,15 +466,15 @@ public class Main {
 
     private void viewCurrentlyBorrowedBooks() {
         System.out.println("\n----------- CURRENTLY BORROWED BOOKS -----------");
-        List<BorrowRecord> records = borrowManager.getCurrentlyBorrowedRecords();
+        List<BorrowRecord> records = this.borrowManager.getCurrentlyBorrowedRecords();
         if (records.isEmpty()) {
             System.out.println("No books are currently borrowed.");
             return;
         }
 
         for (BorrowRecord record : records) {
-            Book b = bookManager.getBookById(record.getBookId());
-            Member m = memberManager.getMemberById(record.getMemberId());
+            Book b = this.bookManager.getBookById(record.getBookId());
+            Member m = this.memberManager.getMemberById(record.getMemberId());
             if (b != null && m != null) {
                 System.out.println("Book: " + record.getBookId() + " - " + b.getTitle()
                         + " | Member: " + record.getMemberId() + " - " + m.getName()
@@ -482,16 +486,16 @@ public class Main {
     private void viewBorrowingHistoryByMember() {
         System.out.println("\n----------- BORROWING HISTORY -----------");
         System.out.print("Enter Member ID: ");
-        String memberId = sc.nextLine().trim();
+        String memberId = this.sc.nextLine().trim();
 
-        Member member = memberManager.getMemberById(memberId);
+        Member member = this.memberManager.getMemberById(memberId);
         if (member == null) {
             System.out.println("Fail: Member not found.");
             return;
         }
 
         System.out.println("Member: " + member.getName());
-        List<BorrowRecord> records = borrowManager.getBorrowingHistoryByMember(memberId);
+        List<BorrowRecord> records = this.borrowManager.getBorrowingHistoryByMember(memberId);
 
         if (records.isEmpty()) {
             System.out.println("No borrowing history found.");
@@ -500,7 +504,7 @@ public class Main {
 
         for (BorrowRecord record : records) {
             String status = record.isReturned() ? "Returned" : "Borrowing";
-            Book b = bookManager.getBookById(record.getBookId());
+            Book b = this.bookManager.getBookById(record.getBookId());
             System.out.println("Book: " + record.getBookId() + " - " + (b != null ? b.getTitle() : "Unknown")
                     + " | Borrow Date: " + record.getBorrowDate()
                     + " | Status: " + status);
@@ -518,20 +522,20 @@ public class Main {
             System.out.println("3. List Most Popular Books");
             System.out.println("4. List Members With Borrowing Count");
             System.out.println("5. Back");
-            choice = readInt("Choose an option: ");
+            choice = this.readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
-                    viewCurrentlyBorrowedBooks();
+                    this.viewCurrentlyBorrowedBooks();
                     break;
                 case 2:
-                    viewOverdueBooks();
+                    this.viewOverdueBooks();
                     break;
                 case 3:
                     viewPopularBooksSimple();
                     break;
                 case 4:
-                    viewMembersBorrowingCount();
+                    this.viewMembersBorrowingCount();
                     break;
                 case 5:
                     break;
@@ -543,7 +547,7 @@ public class Main {
 
     private void viewPopularBooksSimple() {
         System.out.println("\n----------- MOST POPULAR BOOKS SIMPLE -----------");
-        List<Book> books = bookManager.getPopularBooksSimple();
+        List<Book> books = this.bookManager.getPopularBooksSimple();
         boolean found = false;
 
         for (Book b : books) {
@@ -558,7 +562,7 @@ public class Main {
 
     private void viewMembersBorrowingCount() {
         System.out.println("\n----------- MEMBER TOTAL BORROWING COUNT -----------");
-        List<Member> members = memberManager.getMembersBorrowingCount();
+        List<Member> members = this.memberManager.getMembersBorrowingCount();
         boolean found = false;
 
         for (Member m : members) {
@@ -577,7 +581,7 @@ public class Main {
         String reportDateStr = LocalDate.now().format(formatter);
         System.out.println("Report Date: " + reportDateStr);
 
-        List<String> reportLines = borrowManager.getOverdueBooksReport(reportDateStr);
+        List<String> reportLines = this.borrowManager.getOverdueBooksReport(reportDateStr);
         if (reportLines.isEmpty()) {
             System.out.println("No overdue books found.");
             return;
@@ -597,7 +601,7 @@ public class Main {
         while (true) {
             try {
                 System.out.print(message);
-                return Integer.parseInt(sc.nextLine().trim());
+                return Integer.parseInt(this.sc.nextLine().trim());
             } catch (Exception e) {
                 System.out.println("Invalid number. Please enter again.");
             }

@@ -16,12 +16,12 @@ public class BorrowRecord {
     private String downloadLink;
 
     public BorrowRecord(String memberId, String bookId, String borrowDate, String type) {
-        this.memberId = memberId;
-        this.bookId = bookId;
-        this.borrowDate = borrowDate;
+        this.memberId = this.memberId;
+        this.bookId = this.bookId;
+        this.borrowDate = this.borrowDate;
         this.isReturned = false;
-        this.type = type;
-        if ("physical".equalsIgnoreCase(type)) {
+        this.type = this.type;
+        if ("physical".equalsIgnoreCase(this.type)) {
             this.conditionOut = "Good";
             this.conditionIn = "";
         }
@@ -32,7 +32,7 @@ public class BorrowRecord {
     }
 
     public void setMemberId(String memberId) {
-        this.memberId = memberId;
+        this.memberId = this.memberId;
     }
 
     public String getBookId() {
@@ -40,7 +40,7 @@ public class BorrowRecord {
     }
 
     public void setBookId(String bookId) {
-        this.bookId = bookId;
+        this.bookId = this.bookId;
     }
 
     public String getBorrowDate() {
@@ -48,7 +48,7 @@ public class BorrowRecord {
     }
 
     public void setBorrowDate(String borrowDate) {
-        this.borrowDate = borrowDate;
+        this.borrowDate = this.borrowDate;
     }
 
     public boolean isReturned() {
@@ -60,35 +60,35 @@ public class BorrowRecord {
     }
     
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type = this.type;
     }
 
     public String getConditionOut() {
-        return conditionOut;
+        return this.conditionOut;
     }
 
     public void setConditionOut(String conditionOut) {
-        this.conditionOut = conditionOut;
+        this.conditionOut = this.conditionOut;
     }
 
     public String getConditionIn() {
-        return conditionIn;
+        return this.conditionIn;
     }
 
     public void setConditionIn(String conditionIn) {
-        this.conditionIn = conditionIn;
+        this.conditionIn = this.conditionIn;
     }
 
     public String getDownloadLink() {
-        return downloadLink;
+        return this.downloadLink;
     }
 
     public void setDownloadLink(String downloadLink) {
-        this.downloadLink = downloadLink;
+        this.downloadLink = this.downloadLink;
     }
 
     public long calculateFine(long daysOverdue, Member member) {

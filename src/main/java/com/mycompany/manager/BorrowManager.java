@@ -3,9 +3,6 @@ package com.mycompany.manager;
 import com.mycompany.entity.Book;
 import com.mycompany.entity.Member;
 import com.mycompany.entity.BorrowRecord;
-import com.mycompany.entity.Ebook;
-import com.mycompany.entity.EbookBorrowRecord;
-import com.mycompany.entity.PhysicalBorrowRecord;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,13 +23,21 @@ import java.util.List;
  * - BR8: Updates book stock and member borrow counts
  * - BR9: Validates all inputs before processing
  */
-public class BorrowManager extends BaseManager<BorrowRecord> {
+public class BorrowManager {
 
+    private List<BorrowRecord> items = new ArrayList<>();
     private BookManager bookManager = new BookManager();
     private MemberManager memberManager = new MemberManager();
 
     public BorrowManager() {
-        super();
+    }
+
+    public List<BorrowRecord> getAll() {
+        return new ArrayList<>(this.items);
+    }
+
+    public void addLoadedItem(BorrowRecord item) {
+        this.items.add(item);
     }
 
     public BookManager getBookManager() {
@@ -88,7 +93,7 @@ public class BorrowManager extends BaseManager<BorrowRecord> {
         // BR4: A book must be available (stock > 0) before it can be borrowed
         Book book = this.bookManager.getBookById(bookId);
         if (book == null) return "Fail: Book does not exist.";
-        if (book.getQuantity() <= 0 && !(book instanceof Ebook)) return "Fail: Book is out of stock.";
+        if (book.getQuantity() <= 0 && !("ebook".equalsIgnoreCase(book.getType()))) return "Fail: Book is out of stock.";
 
         // BR6: Borrow date must be current or in the past
         // BR9: All inputs must be validated before processing
@@ -98,10 +103,12 @@ public class BorrowManager extends BaseManager<BorrowRecord> {
         LocalDate borrowLocalDate = LocalDate.parse(borrowDate, formatter);
         if (borrowLocalDate.isAfter(LocalDate.now())) return "Fail: Borrow date cannot be in the future.";
 
-        if (book instanceof Ebook) {
-            this.items.add(new EbookBorrowRecord(member.getId(), book.getId(), borrowDate, "http://library.com/download/" + book.getId()));
+        if ("ebook".equalsIgnoreCase(book.getType())) {
+            BorrowRecord record = new BorrowRecord(member.getId(), book.getId(), borrowDate, "ebook");
+            record.setDownloadLink("http://library.com/download/" + book.getId());
+            this.items.add(record);
         } else {
-            this.items.add(new PhysicalBorrowRecord(member.getId(), book.getId(), borrowDate));
+            this.items.add(new BorrowRecord(member.getId(), book.getId(), borrowDate, "physical"));
         }
 
         // BR8: Book stock is reduced upon borrowing and increased upon returning
