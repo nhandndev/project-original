@@ -1,0 +1,9 @@
+manager/BookManager.class
+Main.class
+com/mycompany/project_library/Project_Library.class
+manager/MemberManager.class
+entity/Member.class
+entity/Book.class
+entity/BorrowRecord.class
+manager/DataManager.class
+manager/BorrowManager.class

@@ -1,0 +1,8 @@
+M01|Nguyen Van A|0901234567|nva@gmail.com|regular|0|5
+M02|Tran Thi B|0912345678|ttb@gmail.com|premium|2|18
+M03|Le Van C|0923456789|lvc@gmail.com|regular|1|8
+M04|Pham Thi D|0934567890|ptd@gmail.com|premium|3|22
+M05|Hoang Van E|0945678901|hve@gmail.com|regular|3|15
+M06|Dang Thi F|0956789012|dtf@gmail.com|premium|5|30
+M07|Bui Van G|0967890123|bvg@gmail.com|regular|0|3
+M08|Vu Thi H|0978901234|vth@gmail.com|premium|2|12

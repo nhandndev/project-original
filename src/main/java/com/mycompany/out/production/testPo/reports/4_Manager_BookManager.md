@@ -1,0 +1,18 @@
+# BÁO CÁO MÃ NGUỒN CHI TIẾT - CLASS BOOKMANAGER (MANAGER)
+
+## 1. Bản đồ ánh xạ (Mapping) từ Non-OOP sang OOP
+
+Ở Non-OOP (`codeNoOOP.md`), tất cả logic sách đều nằm trong `Main`. Các hàm này trộn lẫn việc lấy UI Input (`Scanner`) với việc thao túng mảng `books`. Trong OOP, các logic này tách hẳn ra `manager/BookManager.java`, sử dụng `List<Book>`.
+
+| Tên Hàm (Method) | Trạng thái Non-OOP (Trong `Main.java`) | Trạng thái OOP (`BookManager.java`) | Giải thích sự lột xác |
+| :--- | :--- | :--- | :--- |
+| **Tìm sách bằng ID** | `static int findBookIndex(String var0)`:<br>Duyệt vòng `for`, `bookIds[var1].equals(var0)`, trả về `int` index. | `public Book getBookById(String id)`:<br>Duyệt mảng `books`, trả về đối tượng `Book`. | Thay vì lấy index (một con số vô hồn), OOP trả về đúng "Cuốn sách" (Object). Không lo rủi ro nhập sai index ngoài vùng mảng. |
+| **Thêm sách** | `static void addBook()` (Dòng 126):<br>- Kiểm tra `bookCount >= 100`.<br>- Lấy input bằng `sc.nextLine()`.<br>- Gán đè lên 7 mảng ở vị trí `bookCount`.<br>- `bookCount++`. | `public String addBook(String id, String title...)`:<br>- Nhận tham số (Parameters).<br>- Validate (id, title ko rỗng).<br>- `books.add(new Book(...))` | Tách biệt giao diện và logic (Separation of Concerns). `BookManager` KHÔNG ĐƯỢC CHỨA `System.out` hay `Scanner`. Nó nhận tham số truyền vào từ `Main`, xử lý và trả về chuỗi thông báo kết quả. Hủy bỏ giới hạn 100 cuốn sách nhờ `List.add()`. |
+| **Sửa số lượng sách** | `static void updateBook()` (Dòng 179):<br>- Quét mảng tìm index.<br>- Tính toán logic try catch ép kiểu trực tiếp trên hàm.<br>- Sửa bằng `quantities[var1] = var3;` | `public String updateBookQuantity(String id, String quantityInput)`:<br>- Gọi `getBookById(id)`.<br>- Cập nhật qua hàm Setter: `b.setQuantity(newQuantity)`. | Logic ép kiểu (parse) và update vẫn được giữ, nhưng áp dụng thẳng lên đối tượng `Book` thay vì thay đổi chỉ mục của mảng. Trả kết quả về cho `Main` in. |
+| **Xoá sách** | `static void removeBook()` (Dòng 230):<br>- Dùng vòng lặp `for` lùi (Shift left) dồn toàn bộ 7 mảng song song để xoá cuốn sách ở vị trí `var1`. <br>- `--bookCount;` | `public String removeBook(String id, boolean isBorrowed)`:<br>- `Book b = getBookById(id);`<br>- `books.remove(b);` | Chấm dứt ác mộng dịch chuyển chỉ mục (shifting index) thủ công. Cấu trúc `ArrayList` của Java sẽ tự động dồn danh sách khi bạn dùng hàm `.remove()`. |
+| **Hiển thị sách** | `static void viewBooks()` (Dòng 270):<br>- `printf` trực tiếp từ mảng. | `public List<Book> getAllBooks()`:<br>- Trả về `new ArrayList<>(books)`. | `Main` sẽ nhận nguyên một `List` về và tự quyết định in theo Format nào. Tránh việc format bị khóa chết (hardcode) trong logic nghiệp vụ. |
+| **Tìm kiếm sách** | `static void searchBooks()` (Dòng 287):<br>- `titles[var2].toLowerCase().contains()`<br>- `System.out.println` thẳng ra console. | `public List<Book> searchBooks(String keyword)`:<br>- Trả về một `List` chứa kết quả. | Tương tự, trả về List (danh sách) thay vì ép hệ thống phải in ra màn hình. |
+| **Sắp xếp sách phổ biến** | `static void viewPopularBooksSimple()`:<br>- Tạo mảng index phụ.<br>- Sử dụng Bubble Sort (2 vòng lặp lồng nhau). | `public List<Book> getPopularBooksSimple()`:<br>- `sorted.sort((b1, b2) -> Integer.compare(...))` | Thay vì code thuật toán nổi bọt thủ công loằng ngoằng, OOP tận dụng hàm `.sort()` của Java Lambda. Code gọn gàng và chạy nhanh hơn, cực kỳ dễ hiểu. |
+
+## 2. Kết luận đánh giá Class BookManager
+Sự tái sinh của Logic Quản lý Sách! `BookManager` hoạt động như một REST API: Nó nhận Request từ `Main`, xử lý ngầm (CRUD vào cơ sở dữ liệu `ArrayList`), rồi Return Response. Code sạch bóng `System.out.print` và vòng lặp thủ công.

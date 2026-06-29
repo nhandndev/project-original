@@ -1,0 +1,17 @@
+# BÁO CÁO MÃ NGUỒN CHI TIẾT - CLASS BORROWMANAGER (MANAGER)
+
+## 1. Bản đồ ánh xạ (Mapping) từ Non-OOP sang OOP
+
+Nghiệp vụ Mượn/Trả sách là xương sống của phần mềm thư viện. Trong `codeNoOOP.md` (từ dòng 503 đến 626), logic này là một mớ bòng bong vì nó chọc thủng (vi phạm sự đóng gói) cả mảng Sách lẫn mảng Member. Chúng ta đã tách vào `manager/BorrowManager.java`.
+
+| Tên Hàm (Method) | Trạng thái Non-OOP (Trong `Main.java`) | Trạng thái OOP (`BorrowManager.java`) | Giải thích sự lột xác vĩ đại |
+| :--- | :--- | :--- | :--- |
+| **Kiến trúc liên kết** | Các hàm Mượn Trả dùng chung biến `static` của toàn cục chương trình (Biến của Sách, Biến của Member). | `public BorrowManager(BookManager bookManager, MemberManager memberManager)` | Sử dụng **Dependency Injection (DI)**. `BorrowManager` không chọc lén vào dữ liệu của người khác. Nó YÊU CẦU hệ thống phải cấp cho nó 2 người quản lý (`BookManager`, `MemberManager`) thông qua Constructor. Nó sẽ trò chuyện thông qua 2 "người đại diện" này. |
+| **Mượn Sách (Borrow)** | `static void borrowBook()` (Dòng 535):<br>- Kiểm tra qua `findMemberIndex`, `findBookIndex`.<br>- Tăng/giảm biến qua index: `quantities[var3]--`, `bookBorrowCount[var3]++`, v.v... | `public String borrowBook(...)`:<br>- Kiểm tra qua hàm của Object: `book.getQuantity()`.<br>- Trừ sách qua Entity: `book.decreaseQuantity()`, `member.incrementCurrentBorrowCount()`. | Trách nhiệm thao tác dữ liệu được giao về tận tay các Entity. `BorrowManager` chỉ đứng ra làm "nhạc trưởng" điều phối (orchestrator), điều phối Object `book` trừ sách, Object `member` cộng lượt mượn. |
+| **Trả Sách (Return) & Tính Phạt** | `static void returnBook()` (Dòng 588):<br>- Xử lý LocalDate.<br>- Cộng trừ qua index: `quantities[var3]++`.<br>- Sửa trạng thái: `isReturned[var4] = true`. | `public String returnBook(...)`:<br>- Thay đổi Entity: `record.setReturned(true)`.<br>- Tái cấu trúc (Refactor) lại cách in tiền phạt (Fine) mượt mà hơn. | Vẫn sử dụng `LocalDate` và `ChronoUnit` như cũ, nhưng thay vì chỉnh mảng boolean `isReturned[]`, ta gọi hàm Setter của `BorrowRecord`. Dữ liệu cực kỳ thống nhất và an toàn (Thread-safe hơn rất nhiều nếu sau này dev web). |
+| **Kiểm tra Sách đang Mượn** | `static boolean isBookCurrentlyBorrowed()` (Dòng 798) | `public boolean isBookCurrentlyBorrowed(String bookId)` | Đổi từ quét `borrowBookIds[i]` sang quét object `r.getBookId()`. |
+| **Tìm Lịch sử Giao dịch** | `static int findActiveBorrowRecord(...)` (Dòng 808) | `private BorrowRecord findActiveBorrowRecord(...)` | Trả về hẳn Object giao dịch, dễ dàng update trạng thái mà không phải nhớ index. |
+| **Xem Sách Đang Mượn / Xem Quá Hạn** | `viewCurrentlyBorrowedBooks()` (Dòng 656)<br>`viewOverdueBooks()` (Dòng 721) | `getCurrentlyBorrowedRecords()`<br>`getOverdueBooksReport(String date)` | Chuyển logic in ấn (UI) sang `Main`, manager chỉ lọc và trả về `List<BorrowRecord>` hoặc `List<String>`. Ở NonOOP, hàm `viewOverdueBooks` code trộn lẫn `printf`, logic date và logic tìm index của mảng sách. |
+
+## 2. Kết luận đánh giá Class BorrowManager
+**"Cấp phép chứ không chọc lén"**. Bằng cách tiêm `BookManager` và `MemberManager` vào, `BorrowManager` trở thành một Module hoạt động chuẩn mực. Tính kết dính (Coupling) giữa dữ liệu Sách và Người dùng trong hàm Mượn/Trả được gỡ rối hoàn toàn. Khi đọc code OOP, ta thấy logic chảy như một kịch bản giao dịch thực tế: "Lấy thành viên -> Lấy sách -> Khởi tạo hoá đơn (BorrowRecord) -> Cập nhật sách -> Cập nhật thành viên". Rất logic, đẹp và cực kì mạnh mẽ!

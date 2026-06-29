@@ -1,0 +1,10 @@
+B001|Clean Code|Robert C. Martin|Programming|2008|5|12
+B002|Design Patterns|Erich Gamma|Programming|1994|3|8
+B003|The Pragmatic Programmer|Andrew Hunt|Programming|1999|4|15
+B004|Effective Java|Joshua Bloch|Programming|2001|2|6
+B005|To Kill a Mockingbird|Harper Lee|Fiction|1960|10|3
+B006|Java Concurrency|Brian Goetz|Programming|2006|3|5
+B007|Code Complete|Steve McConnell|Programming|2004|2|7
+B008|Introduction to Algorithms|CLRS|Computer Science|2009|1|4
+B009|The Art of Computer Programming|Donald Knuth|Computer Science|1968|1|2
+B010|Algorithms Unlocked|Thomas Cormen|Computer Science|2013|4|8
